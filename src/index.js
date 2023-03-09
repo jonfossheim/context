@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
+import './main.css';
 import reportWebVitals from './reportWebVitals';
-
+import { UserContext, ThemeContext } from './context';
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const ContextProvider = (props) => {
+  const [user, setUser] = useState({ name: 'John', last: 'Doe', auth: false });
+
+  const [theme, setTheme] = useState(false);
+
+  const toggleAuth = () => {
+    setUser({ ...user, auth: !user.auth });
+  };
+
+  const toggleTheme = () => {
+    setTheme(!theme);
+  };
+
+  return (
+    <>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <UserContext.Provider value={{ user, toggleAuth }}>
+          {props.children}
+        </UserContext.Provider>
+      </ThemeContext.Provider>
+    </>
+  );
+};
+
 root.render(
   <React.StrictMode>
-    <App />
+    <ContextProvider>
+      <App />
+    </ContextProvider>
   </React.StrictMode>
 );
 
